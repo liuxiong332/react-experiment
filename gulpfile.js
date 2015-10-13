@@ -82,22 +82,6 @@ gulp.task("webpack-dev-server", function(callback) {
 });
 
 gulp.task('server:build', function(callback) {
-	// webpack({
-	// 	entry: './server/server.js',
-	// 	output: {
-	// 		'path': './dist',
-	// 		filename: 'server.js',
-	// 		libraryTarget: 'commonjs2'
-	// 	},
-	// 	target: 'node',
-	// 	module: {
-	// 		loaders: [{test: /\.jsx?$/, loader: 'babel-loader'}]
-	// 	}
-	// }, function(err, stats) {
-	// 	if(err) throw new gutil.PluginError("server:build", err);
-	// 	gutil.log("[server:build]", stats.toString({colors: true}));
-	// 	callback();
-	// });
 	return gulp.src('./server/*.js')
     .pipe(babel({stage: 0}))
     .pipe(gulp.dest('dist/server'));
