@@ -1,6 +1,7 @@
 var gulp = require("gulp");
 var gutil = require("gulp-util");
 var webpack = require("webpack");
+var babel = require('gulp-babel');
 var WebpackDevServer = require("webpack-dev-server");
 var webpackConfig = require("./webpack.config.js");
 
@@ -16,7 +17,7 @@ gulp.task("build-dev", ["webpack:build-dev"], function() {
 });
 
 // Production build
-gulp.task("build", ["webpack:build"]);
+gulp.task("build", ["webpack:build", "server:build"]);
 
 gulp.task("webpack:build", function(callback) {
 	// modify some webpack config options
@@ -78,4 +79,30 @@ gulp.task("webpack-dev-server", function(callback) {
 		if(err) throw new gutil.PluginError("webpack-dev-server", err);
 		gutil.log("[webpack-dev-server]", "http://localhost:8080/webpack-dev-server/index.html");
 	});
+});
+
+gulp.task('server:build', function(callback) {
+	// webpack({
+	// 	entry: './server/server.js',
+	// 	output: {
+	// 		'path': './dist',
+	// 		filename: 'server.js',
+	// 		libraryTarget: 'commonjs2'
+	// 	},
+	// 	target: 'node',
+	// 	module: {
+	// 		loaders: [{test: /\.jsx?$/, loader: 'babel-loader'}]
+	// 	}
+	// }, function(err, stats) {
+	// 	if(err) throw new gutil.PluginError("server:build", err);
+	// 	gutil.log("[server:build]", stats.toString({colors: true}));
+	// 	callback();
+	// });
+	return gulp.src('./server/*.js')
+    .pipe(babel({stage: 0}))
+    .pipe(gulp.dest('dist/server'));
+});
+
+gulp.task('run', ['build'], function() {
+	require('./dist/server');
 });
